@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "383717299117",
+    "firebase_url": "https://tsn-demo-firebase.firebaseio.com",
+    "project_id": "tsn-demo-firebase",
+    "storage_bucket": "tsn-demo-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383717299117:android:131882ca441baae9",
+        "android_client_info": {
+          "package_name": "kz.proffix4.firebase_firestore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383717299117-bf2e029jj4vth4c6uqrt3vm5illvfeub.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kz.proffix4.firebase_firestore",
+            "certificate_hash": "c9e7fc9aed781a73f2686ec89cedf01c286fdfd2"
+          }
+        },
+        {
+          "client_id": "383717299117-q8srehjq6o9htkeons053kupk5mald0k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB88yWYhS2VGGHFfLKYLf4FfToxBIPwllA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383717299117-q8srehjq6o9htkeons053kupk5mald0k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
