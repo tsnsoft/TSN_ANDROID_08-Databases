@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
             void emptyData() {
                 DataModel dm = new DataModel();
+                dm.setSootnowenie("");
+                dm.setEdinicaIzmerenia("");
                 dm.setKurs("Проверьте доступность сайта и сети");
                 dm.setNameRus("Нет данных");
                 dataset.add(dm);

@@ -9,11 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 // КЛАСС ВИЗУАЛЬНОГО СПИСКА С ДАННЫМИ
-// ИСПОЛЬЗУЕМ ТЕХНОЛОГИЮ BUTTERKNIFE ДЛЯ БИНДИНГА КОМПОНЕНТ С ПЕРЕМЕННЫМИ
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private RoomDatabase database; // Ссылка на базу данных
@@ -27,16 +23,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     // ПОДКЛАСС СОЗДАНИЯ ЭЛЕМЕНТА СПИСКА
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.title)
         public TextView title;
-        @BindView(R.id.description)
         public TextView description;
-        @BindView(R.id.delete)
         public TextView delete;
 
         RecyclerViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            title = itemView.findViewById(R.id.title);
+            description = itemView.findViewById(R.id.description);
+            delete = itemView.findViewById(R.id.delete);
 
             delete.setOnClickListener(view -> {
                 int numRec = getAdapterPosition();

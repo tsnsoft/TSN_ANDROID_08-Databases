@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 //apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 35
+    compileSdkVersion 37
     defaultConfig {
         applicationId "kz.proffix4.firebase_firestore"
         minSdkVersion 24
-        targetSdkVersion 35
-        versionCode 4
-        versionName "2024.12.10"
+        targetSdkVersion 37
+        versionCode 5
+        versionName "2026"
         multiDexEnabled true
     }
     buildTypes {
@@ -22,13 +22,15 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-firestore:25.1.1'
-    implementation 'com.google.firebase:firebase-auth:23.1.0'
-    implementation 'com.google.android.gms:play-services-auth:21.3.0'
-    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation libs.appcompat.v170
+    implementation libs.constraintlayout.v220
+    implementation libs.material.v1140
+    implementation libs.firebase.core
+    implementation libs.firebase.firestore
+    //noinspection LoginCredentials
+    implementation libs.firebase.auth
+    //noinspection LoginCredentials
+    implementation libs.play.services.auth
+    implementation libs.multidex
     apply plugin: 'com.google.gms.google-services'
 }

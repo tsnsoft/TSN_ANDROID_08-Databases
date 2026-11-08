@@ -10,13 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-// ИСПОЛЬЗУЕМ ТЕХНОЛОГИЮ BUTTERKNIFE ДЛЯ БИНДИНГА КОМПОНЕНТ С ПЕРЕМЕННЫМИ
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.recyclerView) // Аннотация для привязки переменной к компоненту
     RecyclerView recyclerView; // Ссылка на компонент RecyclerView
 
     private RoomDatabase database; // Ссылка на ROOM-БД
@@ -25,9 +20,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        recyclerView = findViewById(R.id.recyclerView);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
 
-        ButterKnife.bind(this); // Привязываем компоненты к переменным
         // Инициализируем RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
         database = Database.getInstance().getDatabaseInstance(); // Получаем экземпляр ROOM-БД
@@ -43,14 +38,12 @@ public class MainActivity extends AppCompatActivity {
     // МЕТОД ДЛЯ ОБРАБОТКИ НАЖАТИЙ НА КНОПКИ МЕНЮ
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        if (item.getItemId() == R.id.action_add) {
             // Добавление новой записи
-            case R.id.action_add: {
-                startActivity(new Intent(this, AddDataActivity.class));
-                break;
-            }
+            startActivity(new Intent(this, AddDataActivity.class));
+            return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     // МЕТОД ДЛЯ ОБНОВЛЕНИЯ СПИСКА ПРИ ВОЗВРАТЕ НА ЭКРАН

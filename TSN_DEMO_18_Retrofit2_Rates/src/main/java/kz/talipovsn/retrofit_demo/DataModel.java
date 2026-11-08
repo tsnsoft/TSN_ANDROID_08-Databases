@@ -3,34 +3,35 @@ package kz.talipovsn.retrofit_demo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
-// КЛАСС-МОДЕЛЬ ДАННЫХ С САЙТА  https://data.egov.kz/api/v4/valutalar_bagamdary4/v708
-// Создается через сайт: http://www.jsonschema2pojo.org/
-// с настройками: Java - JSON - Gson
+// КЛАСС-МОДЕЛЬ ДАННЫХ С САЙТА https://api.nbrb.by/exrates/rates?periodicity=0
+// Пример элемента JSON:
+// {"Cur_ID":431, "Cur_Abbreviation":"USD", "Cur_Scale":1, "Cur_Name":"Доллар США", "Cur_OfficialRate":3.25}
 
 public class DataModel {
 
-    @SerializedName("id")
+    @SerializedName("Cur_ID")
     @Expose
     private String id;
-    @SerializedName("name_kaz")
-    @Expose
-    private String nameKaz;
-    @SerializedName("edinica_izmerenia")
-    @Expose
-    private String edinicaIzmerenia;
-    @SerializedName("sootnowenie")
-    @Expose
-    private String sootnowenie;
-    @SerializedName("name_rus")
-    @Expose
-    private String nameRus;
-    @SerializedName("kurs")
-    @Expose
-    private String kurs;
-    @SerializedName("kod")
+
+    @SerializedName("Cur_Abbreviation")
     @Expose
     private String kod;
+
+    @SerializedName("Cur_Scale")
+    @Expose
+    private String sootnowenie;
+
+    @SerializedName("Cur_Name")
+    @Expose
+    private String nameRus;
+
+    @SerializedName("Cur_OfficialRate")
+    @Expose
+    private String kurs;
+
+    // Поля по умолчанию для полной совместимости с DataAdapter
+    private String nameKaz = "";
+    private String edinicaIzmerenia = "BYN";
 
     public String getId() {
         return id;
@@ -57,7 +58,7 @@ public class DataModel {
     }
 
     public String getSootnowenie() {
-        return sootnowenie;
+        return sootnowenie != null ? sootnowenie : "";
     }
 
     public void setSootnowenie(String sootnowenie) {
@@ -65,7 +66,7 @@ public class DataModel {
     }
 
     public String getNameRus() {
-        return nameRus;
+        return nameRus != null ? nameRus : "";
     }
 
     public void setNameRus(String nameRus) {
@@ -73,7 +74,7 @@ public class DataModel {
     }
 
     public String getKurs() {
-        return kurs;
+        return kurs != null ? kurs : "";
     }
 
     public void setKurs(String kurs) {

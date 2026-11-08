@@ -7,28 +7,22 @@ import androidx.core.view.WindowCompat;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 // АКТИВНОСТЬ ДЛЯ ДОБАВЛЕНИЯ НОВОЙ ЗАПИСИ В ROOM-БД
-// ИСПОЛЬЗУЕМ ТЕХНОЛОГИЮ BUTTERKNIFE ДЛЯ БИНДИНГА КОМПОНЕНТ С ПЕРЕМЕННЫМИ
 public class AddDataActivity extends AppCompatActivity {
 
-    @BindView(R.id.title)
     EditText title;
-    @BindView(R.id.description)
     EditText description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+        title = findViewById(R.id.title);
+        description = findViewById(R.id.description);
+        findViewById(R.id.save).setOnClickListener(v -> onSaveClick());
         WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
-        ButterKnife.bind(this);
     }
 
-    @OnClick(R.id.save)
     public void onSaveClick() {
         RoomDatabase database = Database.getInstance().getDatabaseInstance();
 

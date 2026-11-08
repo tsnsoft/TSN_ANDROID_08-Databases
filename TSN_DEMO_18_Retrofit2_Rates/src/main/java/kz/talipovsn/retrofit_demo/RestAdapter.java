@@ -12,13 +12,14 @@ import static kz.talipovsn.retrofit_demo.UnsafeOkHttpClient.getUnsafeOkHttpClien
 
 // АДАПТЕР ЧТЕНИЯ С САЙТА ЧЕРЕЗ ТЕХНОЛОГИЮ RETROFIT 2
 class RestAdapter {
-    private static final String URL = "https://data.egov.kz"; // Сайт, с которого берем данные
-    private static final String API = "/api/v4/valutalar_bagamdary4/v708?apiKey=93b06eeb10454"; // Путь к данным на сайте
+    // Надежный открытый API без ключей, возвращающий готовый JSON-массив валют на русском языке
+    private static final String URL = "https://api.nbrb.by"; // Сайт, с которого берем данные
+    private static final String API = "/exrates/rates?periodicity=0"; // Путь к данным на сайте
 
     private static Retrofit retrofit = null; // Наш объект для работы с сайтом
     private static ApiInterface apiInterface; // Наш интерфейс передачи параметров сайту
 
-    // Наш интерфес передачи параметров сайту
+    // Наш интерфейс передачи параметров сайту
     interface ApiInterface {
         @GET(API)
         Call<List<DataModel>> getData(@Query("pretty") String param); // Метод передачи параметров сайту

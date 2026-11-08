@@ -1,27 +1,23 @@
 package kz.proffix4.firebase_firestore;
 
 import android.os.Bundle;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,16 +25,20 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Демонстрация базовых операций CRUD (Создание, Чтение, Обновление, Удаление)
+ * в облачной NoSQL базе данных Google Cloud Firestore.
+ */
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db; // База данных Firestore
-    private final String collectionPath = "my_table"; // Имя таблицы в БД Firestore
+    private FirebaseFirestore db; // Объект для работы с облачной БД Firestore
+    private final String collectionPath = "my_table"; // Имя коллекции (аналог таблицы в SQL)
 
     private TextView textView; // Текстовый компонент для вывода результата
-    private String lastId; // Последний ID записи в таблице БД
+    private String lastId = null; // Хранит ID последнего обработанного документа (записи)
 
     /**
-     * Запуск программы
+     * Инициализация приложения при запуске
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,99 +48,126 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
 
-        db = FirebaseFirestore.getInstance(); // Подключение к БД
+        // Получаем экземпляр подключения к облачной БД Firestore (настройки берутся из google-services.json)
+        db = FirebaseFirestore.getInstance();
 
         textView = findViewById(R.id.textView); // Находим наш текстовый компонент
     }
 
     /**
-     * Добавление новой записи в таблицу БД
+     * CREATE: Добавление новой записи (документа) в коллекцию БД
      */
     public void onAdd(View view) {
         textView.setText("   добавление данных в облако...");
 
-        Map<String, Object> record = new HashMap<>(); // Переменная - запись для таблицы БД
+        // В Firestore документ представляется как набор пар "Ключ - Значение" (Map)
+        Map<String, Object> record = new HashMap<>();
 
-        // Добавляем в запись параметр "currentData" с текущей датой
+        // Добавляем в запись поле "currentDate" с текущей датой
         record.put("currentDate", new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
 
-        // Добавляем в запись параметр "currentTime" с текущим временем
+        // Добавляем в запись поле "currentTime" с текущим временем
         record.put("currentTime", new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date()));
 
-        // Добавляем в базу данных запись с параметрами
+        // Метод .add() автоматически генерирует уникальный ID для нового документа
         db.collection(collectionPath)
                 .add(record)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    // При успешном добавлении записи в таблицу БД
+                    // Срабатывает при успешной отправке данных в облако
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        textView.setText(String.format("Добавлена запись в таблицу БД с ID: %s", documentReference.getId()));
+                        lastId = documentReference.getId(); // Запоминаем ID только что созданной записи
+                        textView.setText(String.format("Добавлена запись в таблицу БД с ID: %s", lastId));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
-                    // При ошибке добавления записи в таблицу БД
+                    // Срабатывает при ошибке (например, нет интернета или закрыт доступ в Rules)
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         textView.setText(String.format("Ошибка при добавлении записи в БД: %s", e.getMessage()));
                     }
                 });
-
     }
 
-
     /**
-     * Загрузка данных с таблицы БД
+     * READ: Чтение всех записей (документов) из коллекции БД
      */
     public void onLoad(View view) {
         textView.setText("   загрузка базы данных с облака...");
 
         db.collection(collectionPath)
-                .get()
+                .get() // Асинхронный запрос всех документов коллекции
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            textView.setText(""); // Очищаем текстовый компонент
-                            // цикл по записям таблицы БД
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            textView.setText(""); // Очищаем текстовый компонент перед выводом
+                            lastId = null; // Сбрасываем ID перед перебором
+
+                            // Цикл по всем полученным документам коллекции
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                lastId = document.getId(); // Считываем ID текущей записи
-                                textView.append(lastId + " => " + document.getData() + "\n");
+                                lastId = document.getId(); // Сохраняем ID текущей записи (в итоге останется последняя)
+                                textView.append(lastId + " => " + document.getData() + "\n\n");
+                            }
+
+                            if (lastId == null) {
+                                textView.setText("Таблица (коллекция) пуста");
                             }
                         } else {
-                            textView.setText(String.format("Ошибка получения записей: %s", task.getException().getMessage()));
+                            String error = (task.getException() != null) ? task.getException().getMessage() : "Неизвестная ошибка";
+                            textView.setText(String.format("Ошибка получения записей: %s", error));
                         }
                     }
                 });
     }
 
-
     /**
-     * Удаление последней записи в таблице БД
+     * DELETE: Удаление последней записи в коллекции БД по её ID
      */
     public void onDelete(View view) {
-        db.document(collectionPath + "/" + lastId).delete(); // Удаление последней записи в таблице БД
+        if (lastId == null) {
+            Toast.makeText(this, "Сначала загрузите или добавьте данные!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        Toast.makeText(MainActivity.this, "Последняя запись удалена", Toast.LENGTH_SHORT).show();
-
-        onLoad(null); // Повторная загрузка данных
+        // Обращаемся к конкретному документу по пути "имя_коллекции/ID_документа" и удаляем его
+        db.document(collectionPath + "/" + lastId)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(MainActivity.this, "Последняя запись удалена", Toast.LENGTH_SHORT).show();
+                        onLoad(null); // Обновляем список на экране только ПОСЛЕ успешного удаления в облаке
+                    }
+                });
     }
 
     /**
-     * Изменение последней записи в таблице БД
+     * UPDATE: Изменение последней записи в коллекции БД по её ID
      */
     public void onModify(View view) {
-        Map<String, Object> record = new HashMap<>(); // Переменная - запись для таблицы БД
-        record.put("name", "TSN"); // Добавляем в запись параметр "name" со значением "TSN"
-        record.put("os", "linux"); // Добавляем в запись параметр "os" со значением "linux"
+        if (lastId == null) {
+            Toast.makeText(this, "Сначала загрузите или добавьте данные!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        db.document(collectionPath + "/" + lastId).set(record); // Так заменяются все данные на новые
-        // db.document(collectionPath+"/" + lastId).update(record); // Так изменяются старые/добавляются новые данные
+        Map<String, Object> record = new HashMap<>(); // Новые данные для записи
+        record.put("name", "TSN"); // Поле "name" со значением "TSN"
+        record.put("os", "linux"); // Поле "os" со значением "linux"
 
-        Toast.makeText(MainActivity.this, "Последняя запись изменена", Toast.LENGTH_SHORT).show();
-
-        onLoad(null); // Повторная загрузка данных
+        // ВАРИАНТ 1: Метод .set() полностью перезаписывает документ (старые поля currentDate/currentTime сотрутся)
+        db.document(collectionPath + "/" + lastId)
+                .set(record)
+                // ВАРИАНТ 2: Метод .update(record) обновляет только указанные поля, сохраняя старые поля документа:
+                // .update(record)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(MainActivity.this, "Последняя запись изменена", Toast.LENGTH_SHORT).show();
+                        onLoad(null); // Обновляем список на экране только ПОСЛЕ успешного изменения
+                    }
+                });
     }
-
 
     /**
      * Выход из программы
@@ -148,5 +175,4 @@ public class MainActivity extends AppCompatActivity {
     public void onExit(View view) {
         finish();
     }
-
 }

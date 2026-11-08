@@ -24,9 +24,9 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="TSN_DEMO_19_ROOM_DATABASE">
+      <SelectionState runConfigName="TSN_DEMO_20_FIRESTORE_MICRO">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-12-10T11:37:31.841194900Z">
+        <DropdownSelection timestamp="2024-12-10T11:38:41.120515400Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\talip\.android\avd\Galaxy_Nexus_API_25.avd" />
@@ -35,9 +35,9 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="TSN_DEMO_20_FIRESTORE_MICRO">
+      <SelectionState runConfigName="TSN_DEMO_19_ROOM_DATABASE">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-12-10T11:36:12.489924400Z">
+        <DropdownSelection timestamp="2024-12-10T11:38:41.120515400Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\talip\.android\avd\Galaxy_Nexus_API_25.avd" />

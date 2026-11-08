@@ -1,18 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 35
+    compileSdkVersion 37
     defaultConfig {
         applicationId "kz.talipovsn.room_database_demo"
         minSdkVersion 24
-        targetSdkVersion 35
-        versionCode 4
-        versionName "2025.02"
+        targetSdkVersion 37
+        versionCode 5
+        versionName "2026"
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     namespace 'kz.talipovsn.room_database_demo'
@@ -20,12 +20,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.recyclerview:recyclerview:1.4.0'
-    implementation 'androidx.room:room-runtime:2.6.1'
-    annotationProcessor 'androidx.room:room-compiler:2.6.1'
-    implementation 'com.jakewharton:butterknife:10.2.3'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
-    implementation 'com.google.android.material:material:1.12.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+    implementation libs.appcompat.v170
+    implementation libs.recyclerview
+    implementation libs.room.runtime
+    annotationProcessor libs.room.compiler
+    implementation libs.constraintlayout
+    implementation libs.material
 }
