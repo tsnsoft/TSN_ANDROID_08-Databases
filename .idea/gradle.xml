@@ -9,8 +9,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/TSN_DEMO_18_Retrofit2_MICRO" />
-            <option value="$PROJECT_DIR$/TSN_DEMO_18_Retrofit2_Rates" />
             <option value="$PROJECT_DIR$/TSN_DEMO_19_ROOM_DATABASE" />
             <option value="$PROJECT_DIR$/TSN_DEMO_20_FIRESTORE_MICRO" />
           </set>

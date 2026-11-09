@@ -2,6 +2,7 @@ package kz.talipovsn.room_database_demo;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Entity;
@@ -9,84 +10,63 @@ import androidx.room.Insert;
 import androidx.room.PrimaryKey;
 import androidx.room.Query;
 import androidx.room.Room;
-import androidx.annotation.NonNull;
+import androidx.room.RoomDatabase;
 
 import java.util.List;
 
 
-// ОПИСАНИЕ СТРУКТУРЫ ROOM-БД
+// 1. ТАБЛИЦА БАЗЫ ДАННЫХ
+// Класс = таблица, поля класса = столбцы таблицы.
+// Поля сделаны public, поэтому геттеры и сеттеры не нужны.
 @Entity
 class DataModel {
-    @NonNull
     @PrimaryKey
-    private String title; // Название записи
-    private String description; // Описание записи
-
     @NonNull
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(@NonNull String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public String title;       // Название записи (первичный ключ, не может повторяться)
+    public String description; // Описание записи
 }
 
 
-// ИНТЕРФЕЙС ДОСТУПА К ROOM-БД
+// 2. ИНТЕРФЕЙС ДЛЯ РАБОТЫ С ТАБЛИЦЕЙ (DAO)
+// Мы только описываем методы, а код для них Room создаст сам.
 @Dao
 interface IDao {
     @Insert
-    void insert(DataModel dataModel); // Добавление записи в БД
+    void insert(DataModel item);   // Добавить запись
 
     @Delete
-    void delete(DataModel dataModel); // Удаление записи из БД
+    void delete(DataModel item);   // Удалить запись
 
     @Query("SELECT * FROM DataModel")
-        // Получение всех записей из БД
-    List<DataModel> getAllData();
+    List<DataModel> getAllData();  // Получить все записи
 }
 
 
-// КЛАСС ДОСТУПА К ROOM-БД
+// 3. САМА БАЗА ДАННЫХ
+// Здесь перечисляем все таблицы (entities) и версию базы.
 @androidx.room.Database(entities = {DataModel.class}, version = 1, exportSchema = false)
-abstract class RoomDatabase extends androidx.room.RoomDatabase {
+abstract class AppDatabase extends RoomDatabase {
     public abstract IDao getDao();
 }
 
 
-// ГЛОБАЛЬНЫЙ КЛАСС, ДОСТУПНЫЙ ВСЕМ АКТИВНОСТЯМ ПРОГРАММЫ, ДЛЯ РАБОТЫ С ROOM-БД
+// 4. КЛАСС ПРИЛОЖЕНИЯ
+// Запускается один раз при старте программы и создаёт базу данных.
+// Из любой активности доступ к базе: Database.getDao()
 public class Database extends Application {
-    final String DATABASE_NAME = "my-database"; // Имя файла базы данных в памяти устройства  формата SQLite
 
-    private static Database instance; // Ссылка на данный класс для доступа из других классов
-    private RoomDatabase roomDatabase; // Класс для работы с БД ROOM формата SQLite
+    private static IDao dao;
 
-    // Метод для получения ссылки на данный класс
-    public static Database getInstance() {
-        return instance;
+    public static IDao getDao() {
+        return dao;
     }
 
-    // Метод, вызываемый при запуске программы
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = this; // Сохраняем ссылку на данный класс
-        roomDatabase = Room.databaseBuilder(getApplicationContext(), RoomDatabase.class, DATABASE_NAME)
-                .allowMainThreadQueries().fallbackToDestructiveMigration().build(); // Создаем объект для работы с БД
+        AppDatabase db = Room.databaseBuilder(this, AppDatabase.class, "my-database")
+                .allowMainThreadQueries() // Разрешаем работу с БД в главном потоке (только для учебного примера!)
+                .build();
+        dao = db.getDao();
     }
-
-    // Метод для получения объекта для работы с БД
-    public RoomDatabase getDatabaseInstance() {
-        return roomDatabase;
-    }
-
 }

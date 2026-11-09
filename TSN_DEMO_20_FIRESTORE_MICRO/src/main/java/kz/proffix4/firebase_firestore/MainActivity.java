@@ -64,10 +64,12 @@ public class MainActivity extends AppCompatActivity {
         Map<String, Object> record = new HashMap<>();
 
         // Добавляем в запись поле "currentDate" с текущей датой
-        record.put("currentDate", new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
+        record.put("currentDate", new SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).format(new Date()));
 
         // Добавляем в запись поле "currentTime" с текущим временем
-        record.put("currentTime", new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date()));
+        record.put("currentTime", new SimpleDateFormat("HH:mm:ss",
+                Locale.getDefault()).format(new Date()));
 
         // Метод .add() автоматически генерирует уникальный ID для нового документа
         db.collection(collectionPath)
@@ -84,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
                     // Срабатывает при ошибке (например, нет интернета или закрыт доступ в Rules)
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        textView.setText(String.format("Ошибка при добавлении записи в БД: %s", e.getMessage()));
+                        textView.setText(String.format("Ошибка при добавлении записи в БД: %s",
+                                e.getMessage()));
                     }
                 });
     }
@@ -99,7 +102,9 @@ public class MainActivity extends AppCompatActivity {
                 .get() // Асинхронный запрос всех документов коллекции
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
+                    // Срабатывает при завершении запроса (успешно или с ошибкой)
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        // Проверяем успешность запроса и наличие результата
                         if (task.isSuccessful() && task.getResult() != null) {
                             textView.setText(""); // Очищаем текстовый компонент перед выводом
                             lastId = null; // Сбрасываем ID перед перебором
@@ -113,8 +118,9 @@ public class MainActivity extends AppCompatActivity {
                             if (lastId == null) {
                                 textView.setText("Таблица (коллекция) пуста");
                             }
-                        } else {
-                            String error = (task.getException() != null) ? task.getException().getMessage() : "Неизвестная ошибка";
+                        } else { // Если запрос завершился с ошибкой, выводим её в текстовый компонент
+                            String error = (task.getException() != null) ?
+                                    task.getException().getMessage() : "Неизвестная ошибка";
                             textView.setText(String.format("Ошибка получения записей: %s", error));
                         }
                     }
@@ -126,7 +132,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onDelete(View view) {
         if (lastId == null) {
-            Toast.makeText(this, "Сначала загрузите или добавьте данные!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Сначала загрузите или добавьте данные!",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -136,7 +143,8 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(MainActivity.this, "Последняя запись удалена", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Последняя запись удалена",
+                                Toast.LENGTH_SHORT).show();
                         onLoad(null); // Обновляем список на экране только ПОСЛЕ успешного удаления в облаке
                     }
                 });
@@ -147,7 +155,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onModify(View view) {
         if (lastId == null) {
-            Toast.makeText(this, "Сначала загрузите или добавьте данные!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Сначала загрузите или добавьте данные!",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
